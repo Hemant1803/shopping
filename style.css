@@ -395,10 +395,37 @@ ul {
   animation: gradientShift 10s ease-in-out infinite; /* slow drifting gradient */
 }
 
+/* Soft dot texture layered behind the banner text for extra depth */
+.hero-side-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.18) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
 @keyframes gradientShift {
   0%   { background-position: 0% 30%; }
   50%  { background-position: 100% 70%; }
   100% { background-position: 0% 30%; }
+}
+
+/* Keeps the text/button above the dot texture and the decorative icon */
+.side-banner-content {
+  position: relative;
+  z-index: 2;
+}
+
+.side-banner-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
 }
 
 .side-banner-tag {
@@ -410,6 +437,38 @@ ul {
   font-size: 2.2rem;
   font-weight: 800;
   margin: 4px 0;
+}
+
+/* The discount number gets the accent color and a gentle pulse to draw the eye */
+.highlight-amount {
+  display: inline-block;
+  color: var(--accent-color);
+  animation: pulseScale 2s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+
+.side-banner-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  background: #fff;
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  border-radius: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.side-banner-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
 }
 
 /* Decorative emoji graphic inside the banners, with a gentle float animation */
