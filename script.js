@@ -189,14 +189,30 @@ function displayProducts(list) {
 function displayCategories() {
   categoryRow.innerHTML = "";
 
-  categories.forEach((category) => {
+  // "All" is a built-in chip (not part of the data list) that clears the filter
+  const allChip = { name: "All", emoji: "🛍️", color: "#e5e7eb" };
+  const chips = [allChip, ...categories];
+
+  chips.forEach((category, index) => {
+    // Count how many products belong to this category (or all, for the "All" chip)
+    const count =
+      category.name === "All"
+        ? products.length
+        : products.filter((p) => p.category === category.name).length;
+
+    const isActive = activeCategory ? category.name === activeCategory : category.name === "All";
+
     const item = document.createElement("button");
-    item.className = "category-item";
+    item.className = "category-item" + (isActive ? " active" : "");
     item.dataset.category = category.name;
+    item.style.animationDelay = `${index * 0.08}s`;
 
     item.innerHTML = `
-      <span class="category-circle" style="background:${category.color}">${category.emoji}</span>
-      <span>${category.name}</span>
+      <span class="category-circle-wrap">
+        <span class="category-circle" style="background:${category.color}">${category.emoji}</span>
+        <span class="category-count">${count}</span>
+      </span>
+      <span class="category-label">${category.name}</span>
     `;
 
     categoryRow.appendChild(item);
@@ -209,12 +225,12 @@ categoryRow.addEventListener("click", (event) => {
 
   const clickedCategory = item.dataset.category;
 
-  // Clicking the already-active category turns the filter off
-  activeCategory = activeCategory === clickedCategory ? null : clickedCategory;
+  // Clicking "All" clears the filter, otherwise filter by that category
+  activeCategory = clickedCategory === "All" ? null : clickedCategory;
 
-  // Highlight whichever category is currently active
+  // Highlight whichever chip was just clicked
   categoryRow.querySelectorAll(".category-item").forEach((el) => {
-    el.classList.toggle("active", el.dataset.category === activeCategory);
+    el.classList.toggle("active", el.dataset.category === clickedCategory);
   });
 
   applyFilters();

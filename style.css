@@ -536,7 +536,7 @@ ul {
   justify-content: center;
   flex-wrap: wrap;
   gap: 30px;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .category-item {
@@ -550,10 +550,18 @@ ul {
   font-family: inherit;
   color: var(--text-color);
   transition: transform 0.25s ease;
+
+  /* Cards fade/slide up one after another as the page loads */
+  animation: slideUp 0.6s ease both;
 }
 
 .category-item:hover {
   transform: translateY(-6px);
+}
+
+/* Wraps the circle so the little count badge can be positioned against it */
+.category-circle-wrap {
+  position: relative;
 }
 
 .category-circle {
@@ -566,16 +574,61 @@ ul {
   font-size: 2.2rem;
   box-shadow: 0 6px 16px var(--shadow-color);
   border: 3px solid transparent;
-  transition: border-color 0.25s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.category-item:hover .category-circle {
+  transform: scale(1.08);
+}
+
+/* Small badge showing how many products are in this category */
+.category-count {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 10px;
+  border: 2px solid var(--bg-color);
 }
 
 .category-item.active .category-circle {
   border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px var(--shadow-color);
 }
 
-.category-item span {
+.category-label {
   font-size: 0.9rem;
   font-weight: 600;
+  transition: color 0.25s ease;
+}
+
+.category-item.active .category-label {
+  color: var(--primary-color);
+}
+
+/* On small screens, let the row scroll sideways instead of wrapping */
+@media (max-width: 640px) {
+  .category-row {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scroll-snap-type: x proximity;
+  }
+
+  .category-item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
 }
 
 /* =====================================================
@@ -599,6 +652,11 @@ ul {
   flex-direction: column;
   text-align: left;
   overflow: hidden;
+  /* Caps card width and centers it in its grid track, so a single
+     filtered result (or a short last row) doesn't stretch full-width */
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
   background: var(--card-bg);
   border-radius: 16px;
   box-shadow: 0 8px 25px var(--shadow-color);
